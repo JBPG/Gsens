@@ -14,13 +14,13 @@ Jean-Baptiste Pingault & Frank Dudbridge
 Introduction<a name="link1"></a>
 ================================
 
-The following script provides an example on how to run Gsens, a genetically informed sensitivity analysis. Please cite the following papers where the concept was first proposed and then implemented:
+The following script provides an example on how to run Gsens, a genetically informed sensitivity analysis, in R. Please cite the following papers where the concept was first proposed and then implemented:
 1. Pingault, J.-B., O’Reilly, P. F., Schoeler, T., Ploubidis, G. B., Rijsdijk, F., & Dudbridge, F. (2018). Using genetic data to strengthen causal inference in observational research. Nature Reviews Genetics, 19(9), 566–580. <https://doi.org/10.1038/s41576-018-0020-3>
 2. (UPDATE) Pingault, J.-B., Rijsdijk, F., Schoeler, T., Choi, S. W., Kraphol, E., O’Reilly, P. F., & Dudbridge, F. (In Prep). Estimating the sensitivity of associations between risk factors and outcomes to shared genetic effects. BioRxiv.
 
 The following examples are based on the correlation matrix between polygenic scores and variables, which is available as eTable 1 in the supplementary material of article 2.
 
-To begin, please download the "gens.source.R" file from [here](https://github.com/JBPG/Gsens/blob/master/gsens.source.R) and save it into your current working directory. Then load gsens source code with the code below:
+To begin, please download the "gens.source.R" file from [here](https://github.com/JBPG/Gsens/blob/master/gsens.source.R) and save it into your current working directory. Then load the Gsens source code with the code below:
 
 ``` r
 HOME=getwd()
