@@ -135,9 +135,9 @@ SNP-heritability of Y (highlighted in the Table below).
 
 |                              | Education |
 | ---------------------------- | --------- |
-| Best-Fitting Polygenic score | 11.9      |
-| SNP-based scenario           | **31**    |
-| Twin scenario                | 63.01     |
+| Best-Fitting Polygenic score | 0.119     |
+| SNP-based scenario           | **0.31**  |
+| Twin scenario                | 0.63      |
 
 ``` r
 round(gsensY(rxy=0.3975,
