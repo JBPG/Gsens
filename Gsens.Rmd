@@ -14,65 +14,82 @@ output: github_document
  
 
 # Introduction<a name="link1"></a>
-The following script provides an example on how to run Gsens, a genetically informed sensitivity analysis. Please cite the following papers where the concept was first proposed and then implemented:  
+The following script provides an example on how to run Gsens, a genetically informed sensitivity analysis, in R. Please cite the following papers where the concept was first proposed and then implemented:  
 1. Pingault, J.-B., O’Reilly, P. F., Schoeler, T., Ploubidis, G. B., Rijsdijk, F., & Dudbridge, F. (2018). Using genetic data to strengthen causal inference in observational research. Nature Reviews Genetics, 19(9), 566–580. https://doi.org/10.1038/s41576-018-0020-3  
 2. (UPDATE) Pingault, J.-B., Rijsdijk, F., Schoeler, T., Choi, S. W., Kraphol, E., O’Reilly, P. F., & Dudbridge, F. (In Prep). Estimating the sensitivity of associations between risk factors and outcomes to shared genetic effects. BioRxiv.   
 
-The following examples are based on the correlation matrix between polygenic scores and variables, which is available in the supplementary matrial of article 2. 
+The following examples are based on the correlation matrix between polygenic scores and variables, which is available as eTable 1 in the supplementary material of article 2. 
 
-Set working directory and load gsens source code
+To begin, please download the "gens.source.R" file from [here](https://github.com/JBPG/Gsens/blob/master/gsens.source.R) and save it into your current working directory. Then load the Gsens source code with the code below:
 ```{r, results = "hide",message = FALSE  }
 HOME=getwd()
 setwd(HOME)
 source('gsens.source.R')
 ``` 
 
-Three functions are available:    
-gsensY: sensivity based on one polygenic score for the outcome Y.  
-gsensX: sensivity based on one polygenic score for the exposure X.  
-gsensXY: sensivity based on two polygenic scores for X and Y.  
+You should now see three functions in your local environment:    
+- gsensY: sensivity analysis based on one polygenic score for the outcome (Y).  
+- gsensX: sensivity analysis based on one polygenic score for the exposure (X).  
+- gsensXY: sensivity analysis based on two polygenic scores for X and Y.  
 
 # One polygenic score case<a name="link2"></a>
 
 ##Observed scenario
 
-The following example is based on maternal years of education (X), child GCSE (Y), and the best fitting polygenic score for years of education estimated in the child. 
+In the following example, we will test the association between based on maternal years of education (X) and child GCSE scores (Y) after controlling for the best fitting polygenic score for years of education estimated in the child. 
+
+To do so, we will use the "gsensY" function. 
+
+For this, we need to specify 5 things:
+
+- rxz (the correlation between the exposure [x] and outcome [y])*
+- rgx (the correlation between the polygenic score for Y with the exposure [x])*
+- rgy (the correlation between the polygenic score for Y with the outcome [y])*
+- n (sample size)
+- h2 (the variance explained in the outcome, here by the observed polygenic score [hence why h2 is rgy^2])    
+
+*Note that rxz, rgx, and rgy should be partial correlations adjusting for sex, age, and principal components
+
 
 ```{r}
 round(gsensY(rxy=0.3975,rgx = 0.2894,rgy = 0.3446,n=3785,h2=0.3446^2),3)
 ```
 
-rxy, rgx, and rgy are the observed correlations between study variables (note that these should be partial correlations adjusting for sex, age, and principal components);   
-n = sample size;  
-h2 = is the variance explained in the outcome, here by the observed polygenic score (hence why h2 is rgy^2).    
 The output provides:  
 
-The standardized estimate of the relationship between X and Y, adjusted for G (i.e. the residual association after adjusting for the polygenic score). Note that this estimate should be the same as a regression of Y on X adjusting for the polygenic score in the dataset from which the correlations were obtained.  
-
-The estimate of genetic confounding.  
-
-The total effect which should add up to the observed initial association between X and Y.  
+- Adjusted Bxy: This is the standardized estimate of the relationship between X and Y, adjusted for G (i.e. the residual association between maternal education and child GCSE scores adjusting for the child's polygenic score). Note that this estimate should be the same as a regression of Y on X adjusting for the polygenic score in the dataset from which the correlations were obtained.  
+- Genetic confounding: This is the estimate of genetic confounding.  
+- Total effect: This is the total effect which should add up to the observed initial association between X and Y.  
 
 ##Heritability scenario
 
-The sensitivity analysis is implemented by providing the chosen heritability estimate, here h2 = 0.31 corresponding to the SNP-heritability of Y. 
+We will now implement the sensitivity analysis to examine genetic confounding under a scenario in which polygenic scores explain SNP-heritability in the outcome (here child GCSE scores). 
+
+We will do this by adding a "h2" option which provides the chosen heritability estimate. 
+
+Here, h2 = 0.31, which corresponds to the SNP-heritability of Y (child GCSE scores). 
 
 ```{r}
 round(gsensY(rxy=0.3975,rgx = 0.2894,rgy = 0.3446,n=3785,h2=0.31),3)
 ```
 
+The results show that under a SNP heritability scenario, the effect of maternal education on child educational achievement is attenuated (B=0.176) relative to when controlling for observed polygenic scores (B=0.325).
 
-As note in the manuscript, it is possible to fix the ratio k between rgy and rgx when a priori knowledge is available, for example the genetic relationship between the child and the mother. 
+As noted in the manuscript, it is possible to fix the ratio k between rgy and rgx when a priori knowledge is available, for example the genetic relationship between the child and the mother. 
+
+We do this below by specifying that rgx (i.e., the correlation between the child's genetics with maternal education) is half of the correlation between the child's genetics with their own educational achievement (i.e., the SNP heritability). 
+
+We also specify that the rgy (i.e., the correlation between the child's genetics with their own educational achievement) reflects SNP heritability (by taking the square root the heritability estimate to get the correlation).
 
 ```{r}
  round(gsensY(rxy=0.3975,rgx = 0.5*sqrt(.31),rgy = sqrt(.31),n=3785,h2=0.31),3)
 ```
 
-In this fixed solution, rgx and rgy and are set to their value under the heritability scenario, rather than the observed value from the polygenic score.
+In this fixed solution, rgx and rgy and are therefore set to their value under the heritability scenario, rather than the observed value from the polygenic score.
 
 # Two polygenic scores <a name="link3"></a>
 
-When a  polygenic score is available for each of X and Y, both can be modelled using gsensXY, for example,  for maternal years of education and BMI.
+When polygenic scores are available for both X and Y, both can be modelled using gsensXY, for example,  for maternal years of education and BMI.
 
 ## Observed polygenic scores
 ```{r}
