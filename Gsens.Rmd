@@ -40,9 +40,9 @@ In the following example, we will test the association between based on maternal
 
 To do so, we will use the "gsensY" function. 
 
-For this, we need to specify 5 things:
+For this, we need to specify 5 parameters:
 
-- rxz (the correlation between the exposure [x] and outcome [y])*
+- rxy (the correlation between the exposure [x] and outcome [y])*
 - rgx (the correlation between the polygenic score for Y with the exposure [x])*
 - rgy (the correlation between the polygenic score for Y with the outcome [y])*
 - n (sample size)
