@@ -13,6 +13,7 @@ Jean-Baptiste Pingault & Frank Dudbridge
 
 # Introduction<a name="link1"></a>
 
+
 The following script provides an example on how to run Gsens, a
 genetically informed sensitivity analysis. Please cite the following
 papers where the concept was first proposed and then implemented:
@@ -54,7 +55,14 @@ supplementary material of article 2).
 
 </br>
 
-Set working directory and load gsens source code
+The following script provides an example on how to run Gsens, a genetically informed sensitivity analysis, in R. Please cite the following papers where the concept was first proposed and then implemented:
+1. Pingault, J.-B., O’Reilly, P. F., Schoeler, T., Ploubidis, G. B., Rijsdijk, F., & Dudbridge, F. (2018). Using genetic data to strengthen causal inference in observational research. Nature Reviews Genetics, 19(9), 566–580. <https://doi.org/10.1038/s41576-018-0020-3>
+2. (UPDATE) Pingault, J.-B., Rijsdijk, F., Schoeler, T., Choi, S. W., Kraphol, E., O’Reilly, P. F., & Dudbridge, F. (In Prep). Estimating the sensitivity of associations between risk factors and outcomes to shared genetic effects. BioRxiv.
+
+The following examples are based on the correlation matrix between polygenic scores and variables, which is available as eTable 1 in the supplementary material of article 2.
+
+
+To begin, please download the "gens.source.R" file from [here](https://github.com/JBPG/Gsens/blob/master/gsens.source.R) and save it into your current working directory. Then load the Gsens source code with the code below:
 
 ``` r
 HOME=getwd()
@@ -62,7 +70,14 @@ setwd(HOME)
 source('gsens.source.R')
 ```
 
+
 Three functions are available:
+
+You should now see three functions in your local environment:
+- gsensY: sensivity analysis based on one polygenic score for the outcome (Y).
+- gsensX: sensivity analysis based on one polygenic score for the exposure (X).
+- gsensXY: sensivity analysis based on two polygenic scores for X and Y.
+
 
 `gsensY()`: sensivity based on one polygenic score for the outcome Y.
 
@@ -94,10 +109,26 @@ arguments:
 
   - **n** = sample size;
 
+
   - **h2** = is the variance explained in the outcome, here by the
     observed polygenic score (hence why h2 is **rgy^2**).
 
 <!-- end list -->
+
+In the following example, we will test the association between based on maternal years of education (X) and child GCSE scores (Y) after controlling for the best fitting polygenic score for years of education estimated in the child.
+
+To do so, we will use the "gsensY" function.
+
+For this, we need to specify 5 things:
+
+-   rxz (the correlation between the exposure \[x\] and outcome \[y\])\*
+-   rgx (the correlation between the polygenic score for Y with the exposure \[x\])\*
+-   rgy (the correlation between the polygenic score for Y with the outcome \[y\])\*
+-   n (sample size)
+-   h2 (the variance explained in the outcome, here by the observed polygenic score \[hence why h2 is rgy^2\])
+
+\*Note that rxz, rgx, and rgy should be partial correlations adjusting for sex, age, and principal components
+
 
 ``` r
 gsensY(rxy = 0.3975,
@@ -114,6 +145,7 @@ gsensY(rxy = 0.3975,
 
 The output provides:
 
+
   - **Adjusted Bxy** = The standardized estimate of the relationship
     between X and Y, adjusted for G (i.e. the residual association after
     adjusting for the polygenic score). Note that this estimate should
@@ -127,9 +159,15 @@ The output provides:
 
 ## Heritability scenario
 
+-   Adjusted Bxy: This is the standardized estimate of the relationship between X and Y, adjusted for G (i.e. the residual association between maternal education and child GCSE scores adjusting for the child's polygenic score). Note that this estimate should be the same as a regression of Y on X adjusting for the polygenic score in the dataset from which the correlations were obtained.
+-   Genetic confounding: This is the estimate of genetic confounding.
+-   Total effect: This is the total effect which should add up to the observed initial association between X and Y.
+
+
 The sensitivity analysis is implemented by providing the chosen
 heritability estimate, here h2 = 0.31 corresponding to the
 SNP-heritability of Y (highlighted in the Table below).
+
 
 **Heritability and genetic correlation under different scenarios**
 
@@ -138,6 +176,13 @@ SNP-heritability of Y (highlighted in the Table below).
 | Best-Fitting Polygenic score | 0.119     |
 | SNP-based scenario           | **0.31**  |
 | Twin scenario                | 0.63      |
+
+We will now implement the sensitivity analysis to examine genetic confounding under a scenario in which polygenic scores explain SNP-heritability in the outcome (here child GCSE scores).
+
+We will do this by adding a "h2" option which provides the chosen heritability estimate.
+
+Here, h2 = 0.31, which corresponds to the SNP-heritability of Y (child GCSE scores).
+
 
 ``` r
 gsensY(rxy=0.3975,
@@ -152,9 +197,17 @@ gsensY(rxy=0.3975,
     ## Genetic confounding 0.2220 0.0140 15.8489  1.4295e-56   0.1945   0.2494
     ## Total effect        0.3975 0.0158 25.2131 2.8759e-140   0.3666   0.4284
 
+
 As noted in the manuscript, it is possible to fix the ratio k between
 rgy and rgx when a priori knowledge is available, for example the
 genetic relationship between the child and the mother.
+The results show that under a SNP heritability scenario, the effect of maternal education on child educational achievement is attenuated (B=0.176) relative to when controlling for observed polygenic scores (B=0.325).
+
+As noted in the manuscript, it is possible to fix the ratio k between rgy and rgx when a priori knowledge is available, for example the genetic relationship between the child and the mother.
+
+We do this below by specifying that rgx (i.e., the correlation between the child's genetics with maternal education) is half of the correlation between the child's genetics with their own educational achievement (i.e., the SNP heritability).
+
+We also specify that the rgy (i.e., the correlation between the child's genetics with their own educational achievement) reflects SNP heritability (by taking the square root the heritability estimate to get the correlation).
 
 ``` r
 gsensY(rxy=0.3975,
@@ -187,6 +240,8 @@ BMI. The gsensXY function takes a number of additional arguments:
     (maternal education) and the observed polygenic score for education
     (adjusted for sex, age, and principal components);
 
+In this fixed solution, rgx and rgy and are therefore set to their value under the heritability scenario, rather than the observed value from the polygenic score.
+
   - **rg2x** = the correlations between the observed phenotype x
     (maternal education) and the observed polygenic score for BMI
     (adjusted for sex, age, and principal components);
@@ -194,6 +249,7 @@ BMI. The gsensXY function takes a number of additional arguments:
   - **rg1y** = the correlations between the observed phenotype y (BMI)
     and the observed polygenic score for education (adjusted for sex,
     age, and principal components);
+When polygenic scores are available for both X and Y, both can be modelled using gsensXY, for example, for maternal years of education and BMI.
 
   - **rg2y** = the correlations between the observed phenotype y (BMI)
     and the observed polygenic score for BMI (adjusted for sex, age, and
@@ -322,6 +378,7 @@ gsensXY(rxy=-0.0894,
     ## variances are negative
 
     ## lavaan 0.6-7 ended normally after 191 iterations
+    ## lavaan 0.6-6 ended normally after 191 iterations
     ## 
     ##   Estimator                                        GLS
     ##   Optimization method                           NLMINB
@@ -486,3 +543,5 @@ SNP-heritability estimates. Not that in h2.x=0.25x0.31, the factor 0.25
 corresponds to the genetic relatedness between child and mother
 (i.e. sqrt(h2.x) is computed in the model leading to the value of the
 path equal to 0.5xsqrt(0.31).)
+
+Heritability scenarios of interest can be modelled we two polygenic scores by replacing h2.x and h2.y by the chosen values, here SNP-heritability estimates. Not that in h2.x=0.25x0.31, the factor 0.25 corresponds to the genetic relatedness between child and mother (i.e. sqrt(h2.x) is computed in the model leading to the value of the path equal to 0.5xsqrt(0.31).)
