@@ -79,11 +79,6 @@ results
 }
 
 
-
-
-
-
-
 gsensYl = function(rxy, rgx,rgy,n,h2,constrain=NULL,print=FALSE) { 
   mat=matrix(c(1,rgx,rgy,rgx,1,rxy,rgy,rxy,1),ncol=3,nrow=3)
   colnames(mat)=c("G","X","Y"); rownames(mat)=c("G","X","Y")
@@ -122,10 +117,6 @@ gsensYl = function(rxy, rgx,rgy,n,h2,constrain=NULL,print=FALSE) {
 }
 
 
-
-
-
-####Two polygenic scores####
 ####Two polygenic scores####
 gsensXY = function(rxy,rg1x,rg2y,rg1y,rg2x,rg1g2,n,h2.x,h2.y,constrain=NULL,print=FALSE) {
   lower = c(
