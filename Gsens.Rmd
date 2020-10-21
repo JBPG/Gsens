@@ -79,11 +79,11 @@ The following example is based on maternal years of education (X), child GCSE (Y
 
 
 ```{r}
-round(gsensY(rxy=0.3975,
-             rgx = 0.2894,
-             rgy = 0.3446,
-             n=3785,
-             h2=0.3446^2),3)
+gsensY(rxy = 0.3975,
+       rgx = 0.2894,
+       rgy = 0.3446,
+       n = 3785,
+       h2 = 0.3446^2)
 ```
 
 
@@ -109,22 +109,22 @@ The sensitivity analysis is implemented by providing the chosen heritability est
 | Twin scenario                | 0.63     | 
 
 ```{r}
-round(gsensY(rxy=0.3975,
-             rgx = 0.2894,
-             rgy = 0.3446,
-             n=3785,
-             h2=0.31),3)
+gsensY(rxy=0.3975,
+       rgx = 0.2894,
+       rgy = 0.3446,
+       n = 3785,
+       h2 = 0.31)
 ```
 
 
 As noted in the manuscript, it is possible to fix the ratio k between rgy and rgx when a priori knowledge is available, for example the genetic relationship between the child and the mother. 
 
 ```{r}
- round(gsensY(rxy=0.3975,
-              rgx = 0.5*sqrt(.31),
-              rgy = sqrt(.31),
-              n=3785,
-              h2=0.31),3)
+gsensY(rxy=0.3975,
+       rgx = 0.5*sqrt(.31),
+       rgy = sqrt(.31),
+       n = 3785,
+       h2 = 0.31)
 ```
 
 In this fixed solution, rgx and rgy and are set to their value under the heritability scenario, rather than the observed value from the polygenic score.
@@ -155,16 +155,16 @@ When a  polygenic score is available for each of X and Y, both can be modelled u
 ## Observed polygenic scores
 
 ```{r}
-round(gsensXY(rxy=-0.0894,
-              rg1x=0.2894,
-              rg2x=-0.0837,
-              rg1y=-0.0268,
-              rg2y=0.2522,
-              rg1g2=-0.1847,
-              n=3663,
-              h2.x=0.2894^2,
-              h2.y=0.2522^2,
-              print=T),3)
+gsensXY(rxy=-0.0894,
+        rg1x=0.2894,
+        rg2x=-0.0837,
+        rg1y=-0.0268,
+        rg2y=0.2522,
+        rg1g2=-0.1847,
+        n=3663,
+        h2.x=0.2894^2,
+        h2.y=0.2522^2,
+        print=T)
 ```
 
 </br>
@@ -173,18 +173,17 @@ Similar to the one polygenic score case the model is specified with paths betwee
 
 
 ```{r}
-
-round(gsensXY(rxy=-0.0894,
-              rg1x=0.2894,
-              rg2y=0.2522,
-              rg1y=-0.0268,
-              rg2x=-0.0837,
-              rg1g2=-0.1847,
-              n=3663,
-              h2.x=0.2894^2,
-              h2.y=0.2522^2,
-              print=T, 
-              constrain='lg1 < 1 \n lg2 < 1 \n  vg1 > 0  \n vg2 > 0 \n bg1y < 0 \n bg2x < 0 \n bxy < 0'),3)
+gsensXY(rxy=-0.0894,
+        rg1x=0.2894,
+        rg2y=0.2522,
+        rg1y=-0.0268,
+        rg2x=-0.0837,
+        rg1g2=-0.1847,
+        n=3663,
+        h2.x=0.2894^2,
+        h2.y=0.2522^2,
+        print=T, 
+        constrain='lg1 < 1 \n lg2 < 1 \n  vg1 > 0  \n vg2 > 0 \n bg1y < 0 \n bg2x < 0 \n bxy < 0')
 ```
 
 Loadings for the latent part of the model are constrained to be less than 1 and residual variances to be positive. Cross paths and the residual association are constrained to be negative, ie not flip sign.  
@@ -208,11 +207,11 @@ Additional remarks regarding constraints:
 Findings for the constrained vs the unconstrained model diverge. We can use gsensY to and just for the outcome-related polygenic score only, here BMI. Note that in theory, if the polygenic score for the outcome was perfect, adjusting for that polygenic score would be sufficient as it would capture shared genetic influences between X and Y. Findings from adjusting for the BMI polygenic score only converge with the constrained version of the two polygenic score approach.
 
 ```{r}
-round(gsensY(rxy=-0.0894,
-             rgx = -0.0837,
-             rgy = 0.2522,
-             n=3663,
-             h2=0.2522^2),3)
+gsensY(rxy=-0.0894,
+       rgx=-0.0837,
+       rgy=0.2522,
+       n=3663,
+       h2=0.2522^2)
 ```
 
 Note here that the vg is -0.000 here too, which does not affect the model so the warning can be safely ignored.
@@ -221,16 +220,16 @@ Note here that the vg is -0.000 here too, which does not affect the model so the
 
 
 ```{r}
-round(gsensXY(rxy=-0.0894,
-              rg1x=0.2894,
-              rg2y=0.2522,
-              rg1y=-0.0268,
-              rg2x=-0.0837,
-              rg1g2=-0.1847,
-              n=3785,
-              h2.x=0.25*0.31,
-              h2.y=0.186,
-        constrain='lg1 < 1 \n lg2 < 1 \n  vg1 > 0  \n vg2 > 0 \n bg1y < 0 \n bg2x < 0 \n bxy < 0'),3)
+gsensXY(rxy=-0.0894,
+        rg1x=0.2894,
+        rg2y=0.2522,
+        rg1y=-0.0268,
+        rg2x=-0.0837,
+        rg1g2=-0.1847,
+        n=3785,
+        h2.x=0.25*0.31,
+        h2.y=0.186,
+        constrain='lg1 < 1 \n lg2 < 1 \n  vg1 > 0  \n vg2 > 0 \n bg1y < 0 \n bg2x < 0 \n bxy < 0')
 ```
 
 Heritability scenarios of interest can be modelled we two polygenic scores by replacing h2.x and h2.y by the chosen values, here SNP-heritability estimates. Not that in h2.x=0.25x0.31, the factor 0.25 corresponds to the genetic relatedness between child and mother (i.e. sqrt(h2.x) is computed in the model leading to the value of the path equal to 0.5xsqrt(0.31).) 

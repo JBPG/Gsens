@@ -1,4 +1,8 @@
-library("lavaan")
+
+load.lib=c('lavaan', 'dplyr')
+install.lib<-load.lib[!load.lib %in% installed.packages()] # Install missing libraries
+sapply(load.lib,require,character=TRUE) # Load libraries
+
 
 ####One polygenic score####
 gsensY = function(rxy, rgx,rgy,n,h2,constrain=NULL,print=FALSE) { 
@@ -23,12 +27,17 @@ gsensY = function(rxy, rgx,rgy,n,h2,constrain=NULL,print=FALSE) {
 fit1=lavaan(model1,sample.cov=mat,sample.nobs=n,estimator="GLS")
 if (print) {  summary(fit1)}
 pe=parameterestimates(fit1)
+pe$pvalue=formatC(2*pnorm(-abs(pe$z)), digits=5)
 results= data.frame(rbind(
                     pe[pe$label=="bxy",],
                     pe[pe$label=="conf",],
                     pe[pe$label=="total",]
                                         ))[,5:10]
-  
+results = results %>% 
+  mutate_if(is.numeric, round, 4) # round all numeric variables
+
+
+
 rownames(results)=c("Adjusted Bxy","Genetic confounding","Total effect")
 results
 }
@@ -56,11 +65,14 @@ gsensX = function(rxy, rgx,rgy,n,h2,constrain=NULL,print=FALSE) {
 fit1=lavaan(model1,sample.cov=mat,sample.nobs=n,estimator="GLS")
 if (print) {  summary(fit1)}
 pe=parameterestimates(fit1)
+pe$pvalue=formatC(2*pnorm(-abs(pe$z)), digits=5)
 results= data.frame(rbind(
                     pe[pe$label=="bxy",],
                     pe[pe$label=="conf",],
                     pe[pe$label=="total",]
                                         ))[,5:10]
+results = results %>% 
+  mutate_if(is.numeric, round, 4) # round all numeric variables
   
 rownames(results)=c("Adjusted Bxy","Genetic confounding","Total effect")
 results
@@ -96,11 +108,14 @@ gsensYl = function(rxy, rgx,rgy,n,h2,constrain=NULL,print=FALSE) {
   fit1=lavaan(model1,sample.cov=mat,sample.nobs=n,estimator="ML",optim.method = "NLMINB.CONSTR",optim.dx.tol=0.01)
   if (print) {  summary(fit1)}
   pe=parameterestimates(fit1)
+  pe$pvalue=formatC(2*pnorm(-abs(pe$z)), digits=5)
   results= data.frame(rbind(
     pe[pe$label=="bxy",],
     pe[pe$label=="conf",],
     pe[pe$label=="total",]
   ))[,5:10]
+  results = results %>% 
+    mutate_if(is.numeric, round, 4) # round all numeric variables
   
   rownames(results)=c("Adjusted Bxy","Genetic confounding","Total effect")
   results
@@ -145,11 +160,15 @@ gsensXY = function(rxy,rg1x,rg2y,rg1y,rg2x,rg1g2,n,h2.x,h2.y,constrain=NULL,prin
   fit1=lavaan(model1,sample.cov=mat,sample.nobs=n,estimator="GLS")
   if (print) {  summary(fit1)}
   pe=parameterestimates(fit1)
+  pe$pvalue=formatC(2*pnorm(-abs(pe$z)), digits=5)
   results= data.frame(rbind(
     pe[pe$label=="bxy",],
     pe[pe$label=="conf",],
     pe[pe$label=="total",]
   ))[,5:10]
+  
+  results = results %>% 
+    mutate_if(is.numeric, round, 4) # round all numeric variables
   
   rownames(results)=c("Adjusted Bxy","Genetic confounding","Total effect")
   results
