@@ -114,16 +114,4 @@ gsensXY = function(rxy,rg1x,rg2y,rg1y,rg2x,rg1g2,n,h2.x,h2.y,constrain=NULL,prin
 }
 
 
-#TO CHECK, I don't think that following is necessry given how we specify the constraints now
-# ### compute within the model to impose fixed ratios
-# rg1x := bg1x+bg1g2*bg2x
-# # rg1y := bg1y+bg1x*bxy+bg1g2*bg2y+bg1g2*bg2x*bxy
-# #modified rg1y
-# rg1y:= bg1y +bg1g2*bg2y  + bg1x*bxy
-# rg2x := bg2x+bg1g2*bg1x
-# ### compute within the model to impose fixed ratios
-# # rg1y := bg1y+bg1x*bxy+bg1g2*bg2y+bg1g2*bg2x*bxy
-# #NEED TO CHECK RG1Y
-# #modified rg1y
-# rg1y:= bg1y +bg1g2*bg2y  + bg1x*bxy
 
