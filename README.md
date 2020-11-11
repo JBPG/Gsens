@@ -41,18 +41,18 @@ The following examples are based on the correlation matrix between
 polygenic scores and variables, as shown below (also available in the
 supplementary material of article 2).
 
-**Correlations between study variables**
+**Correlations between study
+variables**
 
-
-|                        | Maternal Education | GCSE    | BMI     | ADHD    | EDU PS  | BMI PS  | ADHD PS |
-|------------------------|--------------------|---------|---------|---------|---------|---------|---------|
-| **Maternal Education** | 1                  | 0.3975  | -0.0894 | -0.1240 | 0.2909  | -0.0839 | -0.0630 |
-| **GCSE**               | 0.3975             | 1       | -0.0894 | -0.3398 | 0.3462  | -0.0885 | -0.1103 |
-| **BMI**                | -0.0894            | -0.0894 | 1       | -0.0088 | -0.0269 | 0.2524  | 0.0441  |
-| **ADHD**               | -0.1240            | -0.3398 | -0.0088 | 1       | -0.0902 | 0.0820  | 0.1188  |
-| **EDU PS**             | 0.2909             | 0.3462  | -0.0269 | -0.0902 | 1       | -0.1856 | -0.1865 |
-| **BMI PS**             | -0.0839            | -0.0885 | 0.2524  | 0.0820  | -0.1856 | 1       | 0.1413  |
-| **ADHD PS**            | -0.0630            | -0.1103 | 0.0441  | 0.1188  | -0.1865 | 0.1413  | 1       |
+|                        | Maternal Education | GCSE     | BMI      | ADHD     | EDU PS   | BMI PS   | ADHD PS  |
+| ---------------------- | ------------------ | -------- | -------- | -------- | -------- | -------- | -------- |
+| **Maternal Education** | 1                  | 0.3975   | \-0.0894 | \-0.1240 | 0.2909   | \-0.0839 | \-0.0630 |
+| **GCSE**               | 0.3975             | 1        | \-0.0894 | \-0.3398 | 0.3462   | \-0.0885 | \-0.1103 |
+| **BMI**                | \-0.0894           | \-0.0894 | 1        | \-0.0088 | \-0.0269 | 0.2524   | 0.0441   |
+| **ADHD**               | \-0.1240           | \-0.3398 | \-0.0088 | 1        | \-0.0902 | 0.0820   | 0.1188   |
+| **EDU PS**             | 0.2909             | 0.3462   | \-0.0269 | \-0.0902 | 1        | \-0.1856 | \-0.1865 |
+| **BMI PS**             | \-0.0839           | \-0.0885 | 0.2524   | 0.0820   | \-0.1856 | 1        | 0.1413   |
+| **ADHD PS**            | \-0.0630           | \-0.1103 | 0.0441   | 0.1188   | \-0.1865 | 0.1413   | 1        |
 
 </br>
 
@@ -65,6 +65,14 @@ code with the code below:
 HOME=getwd()
 setwd(HOME)
 source('gsens.source.R')
+
+# Install devtools
+#install.packages("devtools")
+#library(devtools)
+
+# Install Gsens
+#install_github("JBPG/Gsens")
+#library(Gsens)
 ```
 
 Three functions are available:
@@ -113,18 +121,17 @@ Note that rxz, rgx, and rgy should be partial correlations adjusting for
 sex, age, and principal components
 
 ``` r
-round(gsensY(rxy=0.3975,
+gsensY(rxy=0.3975,
              rgx = 0.2909,
              rgy = 0.3462,
              n=3785,
-             h2=0.3462^2),3)
+             h2=0.3462^2)
 ```
 
-    ##                       est    se      z pvalue ci.lower ci.upper
-    ## Adjusted Bxy        0.324 0.017 19.396      0    0.291    0.357
-    ## Genetic confounding 0.073 0.003 22.881      0    0.067    0.080
-    ## Total effect        0.397 0.015 26.479      0    0.368    0.427
-
+    ##                       est    se      z      pvalue ci.lower ci.upper
+    ## Adjusted Bxy        0.324 0.017 19.396  8.4077e-84    0.291    0.357
+    ## Genetic confounding 0.073 0.003 22.881 7.1055e-116    0.067    0.080
+    ## Total effect        0.397 0.015 26.479 1.6783e-154    0.368    0.427
 
 The output provides:
 
@@ -162,18 +169,17 @@ GCSE scores).
 | Twin scenario                | 0.63      |
 
 ``` r
-round(gsensY(rxy=0.3975,
-             rgx = 0.2909,
-             rgy = 0.3462,
-             n=3785,
-             h2=0.31),3)
+gsensY(rxy=0.3975,
+       rgx = 0.2909,
+       rgy = 0.3462,
+       n=3785,
+       h2=0.31)
 ```
 
-    ##                       est    se      z pvalue ci.lower ci.upper
-    ## Adjusted Bxy        0.175 0.024  7.359      0    0.129    0.222
-    ## Genetic confounding 0.222 0.014 15.914      0    0.195    0.249
-    ## Total effect        0.397 0.016 25.212      0    0.367    0.428
-
+    ##                       est    se      z      pvalue ci.lower ci.upper
+    ## Adjusted Bxy        0.175 0.024  7.359  1.8564e-13    0.129    0.222
+    ## Genetic confounding 0.222 0.014 15.914  5.0431e-57    0.195    0.249
+    ## Total effect        0.397 0.016 25.212 2.9876e-140    0.367    0.428
 
 The results show that under a SNP heritability scenario, the effect of
 maternal education on child educational achievement is attenuated
@@ -202,10 +208,10 @@ gsensY(rxy=0.3975,
        h2 = 0.31)
 ```
 
-    ##                        est     se       z      pvalue ci.lower ci.upper
-    ## Adjusted Bxy        0.2629 0.0155 16.9411  2.2374e-64   0.2325   0.2933
-    ## Genetic confounding 0.1346 0.0063 21.2077 8.1051e-100   0.1222   0.1471
-    ## Total effect        0.3975 0.0152 26.0919 4.5077e-150   0.3676   0.4274
+    ##                       est    se      z      pvalue ci.lower ci.upper
+    ## Adjusted Bxy        0.263 0.016 16.941  2.2374e-64    0.232    0.293
+    ## Genetic confounding 0.135 0.006 21.208 8.1051e-100    0.122    0.147
+    ## Total effect        0.397 0.015 26.092 4.5077e-150    0.368    0.427
 
 In this fixed solution, rgx and rgy and are therefore set to their value
 under the heritability scenario, rather than the observed value from the
@@ -252,7 +258,7 @@ BMI. The gsensXY function takes a number of additional arguments:
 ## Observed polygenic scores
 
 ``` r
-round(gsensXY(rxy=-0.0894,
+gsensXY(rxy=-0.0894,
               rg1x=0.2909,
               rg2x=-0.0839,
               rg1y=-0.0269,
@@ -261,11 +267,10 @@ round(gsensXY(rxy=-0.0894,
               n=3663,
               h2.x=0.2909^2,
               h2.y=0.2524^2,
-              print=T),3)
+              print=T)
 ```
 
-    ## lavaan 0.6-6 ended normally after 70 iterations
-
+    ## lavaan 0.6-7 ended normally after 70 iterations
     ## 
     ##   Estimator                                        GLS
     ##   Optimization method                           NLMINB
@@ -325,12 +330,10 @@ round(gsensXY(rxy=-0.0894,
     ##     bg1x+bg1g2*bg2x - (sqrt(0.08462281))         0.000
     ##     bg2y+(bg2x+bg1g2*b1)*+12*1-((0.06370576))    0.000
 
-
-    ##                        est    se      z pvalue ci.lower ci.upper
-    ## Adjusted Bxy        -0.081 0.017 -4.820  0.000   -0.114   -0.048
-    ## Genetic confounding -0.009 0.006 -1.343  0.179   -0.021    0.004
-    ## Total effect        -0.089 0.016 -5.431  0.000   -0.122   -0.057
-
+    ##                        est    se      z     pvalue ci.lower ci.upper
+    ## Adjusted Bxy        -0.081 0.017 -4.820 1.4336e-06   -0.114   -0.048
+    ## Genetic confounding -0.009 0.006 -1.343    0.17943   -0.021    0.004
+    ## Total effect        -0.089 0.016 -5.431 5.5933e-08   -0.122   -0.057
 
 </br>
 
@@ -343,7 +346,7 @@ education is linked to higher BMI. In such cases, constraints can be
 imposed on the the model in the following way.
 
 ``` r
-round(gsensXY(rxy=-0.0894,
+gsensXY(rxy=-0.0894,
               rg1x=0.2909,
               rg2x=-0.0839,
               rg1y=-0.0269,
@@ -353,11 +356,10 @@ round(gsensXY(rxy=-0.0894,
               h2.x=0.2909^2,
               h2.y=0.2524^2,
               print=T, 
-              constrain='lg1 < 1 \n lg2 < 1 \n  vg1 > 0  \n vg2 > 0 \n bg1y < 0 \n bg2x < 0 \n bxy < 0'),3)
+              constrain='lg1 < 1 \n lg2 < 1 \n  vg1 > 0  \n vg2 > 0 \n bg1y < 0 \n bg2x < 0 \n bxy < 0')
 ```
 
-    ## lavaan 0.6-6 ended normally after 183 iterations
-
+    ## lavaan 0.6-7 ended normally after 196 iterations
     ## 
     ##   Estimator                                        GLS
     ##   Optimization method                           NLMINB
@@ -382,16 +384,14 @@ round(gsensXY(rxy=-0.0894,
     ##   GG1 =~                                              
     ##     G1       (lg1)    0.998    0.011   87.425    0.000
     ##   GG2 =~                                              
-    ##     G2       (lg2)    1.000       NA                  
+    ##     G2       (lg2)    1.000                           
     ## 
     ## Regressions:
     ##                    Estimate  Std.Err  z-value  P(>|z|)
     ##   Y ~                                                 
-    
     ##     X        (bxy)   -0.069    0.016   -4.297    0.000
     ##     GG1     (bg1y)   -0.000       NA                  
     ##     GG2     (bg2y)    0.247    0.002  141.325    0.000
-
     ##   X ~                                                 
     ##     GG1     (bg1x)    0.285    0.003   94.417    0.000
     ##     GG2     (bg2x)   -0.031    0.016   -1.921    0.055
@@ -405,12 +405,10 @@ round(gsensXY(rxy=-0.0894,
     ##                    Estimate  Std.Err  z-value  P(>|z|)
     ##     GG1               1.000                           
     ##     GG2               1.000                           
-
     ##    .Y         (vy)    0.928    0.022   42.712    0.000
     ##    .X         (vx)    0.914    0.021   42.778    0.000
     ##    .G1       (vg1)    0.000       NA                  
     ##    .G2       (vg2)    0.000                           
-
     ## 
     ## Defined Parameters:
     ##                    Estimate  Std.Err  z-value  P(>|z|)
@@ -429,12 +427,10 @@ round(gsensXY(rxy=-0.0894,
     ##     0 - (bg2x)                                   0.031
     ##     0 - (bxy)                                    0.069
 
-
-    ##                        est    se      z pvalue ci.lower ci.upper
-    ## Adjusted Bxy        -0.069 0.016 -4.297      0   -0.100   -0.037
-    ## Genetic confounding -0.021 0.004 -5.328      0   -0.028   -0.013
-    ## Total effect        -0.089 0.016 -5.458      0   -0.122   -0.057
-
+    ##                        est    se      z     pvalue ci.lower ci.upper
+    ## Adjusted Bxy        -0.069 0.016 -4.297 1.7339e-05   -0.100   -0.037
+    ## Genetic confounding -0.021 0.004 -5.328 9.9505e-08   -0.028   -0.013
+    ## Total effect        -0.089 0.016 -5.458 4.8156e-08   -0.122   -0.057
 
 Loadings for the latent part of the model are constrained to be less
 than 1 and residual variances to be positive. Cross paths and the
@@ -481,18 +477,17 @@ from adjusting for the BMI polygenic score only converge with the
 constrained version of the two polygenic score approach.
 
 ``` r
-round(gsensY(rxy=-0.0894,
+gsensY(rxy=-0.0894,
              rgx = -0.0839,
              rgy = 0.2524,
              n=3663,
-             h2=0.2524^2),3)
+             h2=0.2524^2)
 ```
 
-    ##                        est    se      z pvalue ci.lower ci.upper
-    ## Adjusted Bxy        -0.069 0.016 -4.233      0   -0.101   -0.037
-    ## Genetic confounding -0.021 0.004 -5.063      0   -0.029   -0.013
-    ## Total effect        -0.089 0.016 -5.429      0   -0.122   -0.057
-
+    ##                        est    se      z     pvalue ci.lower ci.upper
+    ## Adjusted Bxy        -0.069 0.016 -4.233 2.3022e-05   -0.101   -0.037
+    ## Genetic confounding -0.021 0.004 -5.063 4.1229e-07   -0.029   -0.013
+    ## Total effect        -0.089 0.016 -5.429 5.6544e-08   -0.122   -0.057
 
 Note here that the vg is -0.000 here too, which does not affect the
 model so the warning can be safely ignored.
@@ -500,7 +495,7 @@ model so the warning can be safely ignored.
 ## Heritability scenario
 
 ``` r
-round(gsensXY(rxy=-0.0894,
+gsensXY(rxy=-0.0894,
               rg1x=0.2909,
               rg2x=-0.0839,
               rg1y=-0.0269,
@@ -509,17 +504,20 @@ round(gsensXY(rxy=-0.0894,
               n=3785,
               h2.x=0.25*0.31,
               h2.y=0.186,
-        constrain='lg1 < 1 \n lg2 < 1 \n  vg1 > 0  \n vg2 > 0 \n bg1y < 0 \n bg2x < 0 \n bxy < 0'),3)
-
+        constrain='lg1 < 1 \n lg2 < 1 \n  vg1 > 0  \n vg2 > 0 \n bg1y < 0 \n bg2x < 0 \n bxy < 0')
 ```
 
     ## Warning in lav_object_post_check(object): lavaan WARNING: some estimated ov
     ## variances are negative
 
-    ##                        est    se      z pvalue ci.lower ci.upper
-    ## Adjusted Bxy        -0.043 0.017 -2.464  0.014   -0.077   -0.009
-    ## Genetic confounding -0.052 0.010 -5.193  0.000   -0.072   -0.033
-    ## Total effect        -0.095 0.016 -5.832  0.000   -0.127   -0.063
+    ##                        est    se      z     pvalue ci.lower ci.upper
+    ## Adjusted Bxy        -0.043 0.017 -2.464   0.013754   -0.077   -0.009
+    ## Genetic confounding -0.052 0.010 -5.193 2.0673e-07   -0.072   -0.033
+    ## Total effect        -0.095 0.016 -5.832  5.484e-09   -0.127   -0.063
 
-Heritability scenarios of interest can be modelled we two polygenic scores by replacing h2.x and h2.y by the chosen values, here SNP-heritability estimates. Not that in h2.x=0.25x0.31, the factor 0.25 corresponds to the genetic relatedness between child and mother (i.e. sqrt(h2.x) is computed in the model leading to the value of the path equal to 0.5xsqrt(0.31).)
-
+Heritability scenarios of interest can be modelled we two polygenic
+scores by replacing h2.x and h2.y by the chosen values, here
+SNP-heritability estimates. Not that in h2.x=0.25x0.31, the factor 0.25
+corresponds to the genetic relatedness between child and mother
+(i.e. sqrt(h2.x) is computed in the model leading to the value of the
+path equal to 0.5xsqrt(0.31).)

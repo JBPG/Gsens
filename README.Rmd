@@ -52,6 +52,14 @@ To begin, please download the "gens.source.R" file from [here](https://github.co
 HOME=getwd()
 setwd(HOME)
 source('gsens.source.R')
+
+# Install devtools
+#install.packages("devtools")
+#library(devtools)
+
+# Install Gsens
+#install_github("JBPG/Gsens")
+#library(Gsens)
 ``` 
 
 
@@ -89,11 +97,11 @@ Note that rxz, rgx, and rgy should be partial correlations adjusting for sex, ag
 
 
 ```{r}
-round(gsensY(rxy=0.3975,
+gsensY(rxy=0.3975,
              rgx = 0.2909,
              rgy = 0.3462,
              n=3785,
-             h2=0.3462^2),3)
+             h2=0.3462^2)
 ```
 
 
@@ -124,11 +132,11 @@ Here, h2 = 0.31, which corresponds to the SNP-heritability of Y (child GCSE scor
 
 
 ```{r}
-round(gsensY(rxy=0.3975,
-             rgx = 0.2909,
-             rgy = 0.3462,
-             n=3785,
-             h2=0.31),3)
+gsensY(rxy=0.3975,
+       rgx = 0.2909,
+       rgy = 0.3462,
+       n=3785,
+       h2=0.31)
 ```
 
 The results show that under a SNP heritability scenario, the effect of maternal education on child educational achievement is attenuated (B=0.176) relative to when controlling for observed polygenic scores (B=0.325).
@@ -177,7 +185,7 @@ When a  polygenic score is available for each of X and Y, both can be modelled u
 ## Observed polygenic scores
 
 ```{r}
-round(gsensXY(rxy=-0.0894,
+gsensXY(rxy=-0.0894,
               rg1x=0.2909,
               rg2x=-0.0839,
               rg1y=-0.0269,
@@ -186,7 +194,7 @@ round(gsensXY(rxy=-0.0894,
               n=3663,
               h2.x=0.2909^2,
               h2.y=0.2524^2,
-              print=T),3)
+              print=T)
 ```
 
 </br>
@@ -196,7 +204,7 @@ Similar to the one polygenic score case the model is specified with paths betwee
 
 
 ```{r}
-round(gsensXY(rxy=-0.0894,
+gsensXY(rxy=-0.0894,
               rg1x=0.2909,
               rg2x=-0.0839,
               rg1y=-0.0269,
@@ -206,7 +214,7 @@ round(gsensXY(rxy=-0.0894,
               h2.x=0.2909^2,
               h2.y=0.2524^2,
               print=T, 
-              constrain='lg1 < 1 \n lg2 < 1 \n  vg1 > 0  \n vg2 > 0 \n bg1y < 0 \n bg2x < 0 \n bxy < 0'),3)
+              constrain='lg1 < 1 \n lg2 < 1 \n  vg1 > 0  \n vg2 > 0 \n bg1y < 0 \n bg2x < 0 \n bxy < 0')
 ```
 
 Loadings for the latent part of the model are constrained to be less than 1 and residual variances to be positive. Cross paths and the residual association are constrained to be negative, ie not flip sign.  
@@ -230,11 +238,11 @@ Additional remarks regarding constraints:
 Findings for the constrained vs the unconstrained model diverge. We can use gsensY to and just for the outcome-related polygenic score only, here BMI. Note that in theory, if the polygenic score for the outcome was perfect, adjusting for that polygenic score would be sufficient as it would capture shared genetic influences between X and Y. Findings from adjusting for the BMI polygenic score only converge with the constrained version of the two polygenic score approach.
 
 ```{r}
-round(gsensY(rxy=-0.0894,
+gsensY(rxy=-0.0894,
              rgx = -0.0839,
              rgy = 0.2524,
              n=3663,
-             h2=0.2524^2),3)
+             h2=0.2524^2)
 ```
 
 Note here that the vg is -0.000 here too, which does not affect the model so the warning can be safely ignored.
@@ -245,7 +253,7 @@ Note here that the vg is -0.000 here too, which does not affect the model so the
 
 
 ```{r}
-round(gsensXY(rxy=-0.0894,
+gsensXY(rxy=-0.0894,
               rg1x=0.2909,
               rg2x=-0.0839,
               rg1y=-0.0269,
@@ -254,7 +262,7 @@ round(gsensXY(rxy=-0.0894,
               n=3785,
               h2.x=0.25*0.31,
               h2.y=0.186,
-        constrain='lg1 < 1 \n lg2 < 1 \n  vg1 > 0  \n vg2 > 0 \n bg1y < 0 \n bg2x < 0 \n bxy < 0'),3)
+        constrain='lg1 < 1 \n lg2 < 1 \n  vg1 > 0  \n vg2 > 0 \n bg1y < 0 \n bg2x < 0 \n bxy < 0')
 ```
 
 Heritability scenarios of interest can be modelled we two polygenic scores by replacing h2.x and h2.y by the chosen values, here SNP-heritability estimates. Not that in h2.x=0.25x0.31, the factor 0.25 corresponds to the genetic relatedness between child and mother (i.e. sqrt(h2.x) is computed in the model leading to the value of the path equal to 0.5xsqrt(0.31).) 
