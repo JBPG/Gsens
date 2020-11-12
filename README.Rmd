@@ -47,19 +47,29 @@ The following examples are based on the correlation matrix between polygenic sco
 </br>
 
 
-To begin, please download the "gens.source.R" file from [here](https://github.com/JBPG/Gsens/blob/master/gsens.source.R) and save it into your current working directory. Then load the Gsens source code with the code below:
-```{r, results = "hide",message = FALSE  }
-HOME=getwd()
-setwd(HOME)
-source('gsens.source.R')
 
+```{r, results = "hide",message = FALSE,  echo=FALSE  }
+HOME=getwd()
+setwd(paste0(HOME, "/R"))
+source('gsens.R')
+x=3
+```
+
+# Installation of Gsens
+
+</br>
+
+To begin, please install and load the Gsens package  with the code below:
+
+
+```{r eval=FALSE}
 # Install devtools
-#install.packages("devtools")
-#library(devtools)
+install.packages("devtools")
+library(devtools)
 
 # Install Gsens
-#install_github("JBPG/Gsens")
-#library(Gsens)
+install_github("JBPG/Gsens")
+library(Gsens)
 ``` 
 
 
