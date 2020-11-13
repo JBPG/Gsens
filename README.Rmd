@@ -1,7 +1,7 @@
 ---
 title: "Gsens"
-author: "Jean-Baptiste Pingault & Frank Dudbridge"
-date: "20 August 2020"
+author: "Jean-Baptiste Pingault, Tabea Schoeler & Frank Dudbridge"
+date: "13 November 2020"
 output: github_document
 ---
  
@@ -20,17 +20,17 @@ The following script provides an example on how to run Gsens, a genetically info
 
 1. Pingault, J.-B., O’Reilly, P. F., Schoeler, T., Ploubidis, G. B., Rijsdijk, F., & Dudbridge, F. (2018). Using genetic data to strengthen causal inference in observational research. Nature Reviews Genetics, 19(9), 566–580. https://doi.org/10.1038/s41576-018-0020-3  
 
-2. (UPDATE) Pingault, J.-B., Rijsdijk, F., Schoeler, T., Choi, S. W., Kraphol, E., O’Reilly, P. F., & Dudbridge, F. (In Prep). Estimating the sensitivity of associations between risk factors and outcomes to shared genetic effects. BioRxiv.   
+2. Pingault, J.-B., Rijsdijk, F., Schoeler, T., Choi, S. W., Selzam, S., Kraphol, E., O’Reilly, P. F., & Dudbridge, F. Genetic sensitivity analysis: adjusting for genetic confounding in epidemiological associations. BioRxiv. 
 
 
-In this tutorial, we illustrate the use of `Gsens` to estimate the role of genetic confounding in explaining the associations between maternal educational and three developmental outcomes in the child
+In this tutorial, we illustrate the use of `Gsens` to estimate the role of genetic confounding in explaining the associations between maternal educational and three developmental outcomes in the offspring
 
 - educational achievement 
 - BMI
 - ADHD
 
 
-The following examples are based on the correlation matrix between polygenic scores and variables, as shown below (also available in the supplementary material of article 2). 
+The following examples are based on the correlation matrix between polygenic scores and variables, as shown below (also available in the supplementary material of article 2). Study variables are residualised for sex and PCAs before computing the correlations.
 
 **Correlations between study variables**
 
@@ -81,29 +81,27 @@ Three functions are available:
 
 `gsensXY()`: sensivity analysis based on two polygenic scores for X and Y
 
+As noted in the manuscript, `gsensY()` should be preferred in almost all situations. 
 
 # One polygenic score case<a name="link2"></a>
 
 ## Observed scenario
 
-In the following example, we will test the association between based on maternal years of education (X) and child GCSE scores (Y) after controlling for the best fitting polygenic score for years of education estimated in the child. 
+In the following example, we will test the association between maternal years of education (X) and child GCSE scores (Y) after controlling for the best fitting polygenic score for years of education estimated in the child. 
 
 To do so, we will use the "gsensY" function. 
 
 For this, we need to specify 5 parameters:
 
-* **rxy** =  the observed phenotypic correlations between study variables (here: correlation between maternal years of education and child GCSE);
+* **rxy** =  the observed phenotypic correlation between exposure X and outcome Y (here: correlation between maternal years of education and child GCSE);
 
-* **rgx** = the observed correlations between phenotype X (maternal years of education) and the observed polygenic score for education (note that these should be partial correlations adjusting for sex, age, and principal components);
+* **rgx** = the observed correlation between phenotype X (maternal years of education) and the observed polygenic score for education;
 
-* **rgy** = the observed correlations between phenotype Y (child GCSE) and the observed polygenic score for education (adjusted for sex, age, and principal components);
+* **rgy** = the observed correlation between phenotype Y (child GCSE) and the observed polygenic score for education (adjusted for sex, age, and principal components);
 
 * **n** = sample size;  
 
 * **h2** = is the variance explained in the outcome, here by the observed polygenic score (hence why h2 is **rgy^2**).    
-
-
-Note that rxz, rgx, and rgy should be partial correlations adjusting for sex, age, and principal components
 
 
 ```{r}
@@ -117,11 +115,11 @@ gsensY(rxy=0.3975,
 
 The output provides:  
 
-* **Adjusted Bxy**  This is the standardized estimate of the relationship between X and Y, adjusted for G (i.e. the residual association between maternal education and child GCSE scores adjusting for the child's polygenic score). Note that this estimate should be the same as a regression of Y on X adjusting for the polygenic score in the dataset from which the correlations were obtained.
+* **Adjusted Bxy**  This is the standardized estimate of the relationship between X and Y, adjusted for G (i.e. the residual association between maternal education and child GCSE scores adjusting for the offspring's polygenic score). Note that this estimate should be the same as a regression of Y on X adjusting for the polygenic score in the dataset from which the correlations were obtained.
 
 * **Genetic confounding**  This is the estimate of genetic confounding.
 
-* **Total effect**  This is the total effect which should add up to the observed initial association between X and Y.  
+* **Total effect**  This is the total effect, which should add up to the observed initial association between X and Y when no constraints are added.  
 
 
 ## Heritability scenario
@@ -156,7 +154,7 @@ As noted in the manuscript, it is possible to fix the ratio k between rgy and rg
 
 We do this below by specifying that rgx (i.e., the correlation between the child's genetics with maternal education) is half of the correlation between the child's genetics with their own educational achievement (i.e., the SNP heritability). 
 
-We also specify that the rgy (i.e., the correlation between the child's genetics with their own educational achievement) reflects SNP heritability (by taking the square root the heritability estimate to get the correlation).
+We also specify that the rgy (i.e., the correlation between the child's genetics with their own educational achievement) reflects SNP heritability (by taking the square root the heritability estimate to get the corresponding path value).
 
 ```{r}
 gsensY(rxy=0.3975,
@@ -173,21 +171,21 @@ In this fixed solution, rgx and rgy and are therefore set to their value under t
 
 When a  polygenic score is available for each of X and Y, both can be modelled using gsensXY, for example, for maternal years of education and BMI. The gsensXY function takes a number of additional arguments:
 
- * **rxy** =  as before, the observed phenotypic correlations between study variables (here: correlation between maternal years of education and BMI);
+ * **rxy** =  as before, the observed phenotypic correlation between exposure X and outcome Y (here: correlation between maternal years of education and BMI);
 
-* **rg1x** = the correlations between the observed phenotype x (maternal education) and the observed polygenic score for education (adjusted for sex, age, and principal components);
+* **rg1x** = the correlation between the observed exposure X and the polygenic score for X (maternal education) and the observed polygenic score for education;
 
-* **rg2x** = the correlations between the observed phenotype x (maternal education) and the observed polygenic score for BMI (adjusted for sex, age, and principal components);
+* **rg2x** = the correlation between the observed exposure X (maternal education) and the observed polygenic score for BMI;
 
-* **rg1y** = the correlations between the observed phenotype y (BMI) and the observed polygenic score for education (adjusted for sex, age, and principal components);
+* **rg1y** = the correlations between the observed outcome Y (BMI) and the observed polygenic score for education;
 
-* **rg2y** = the correlations between the observed phenotype y (BMI) and the observed polygenic score for BMI (adjusted for sex, age, and principal components);
+* **rg2y** = the correlation between the observed outcome Y (BMI) and the observed polygenic score for BMI;
 
-* **rg1g2** = the correlations between the observed polygenic scores for education and BMI;
+* **rg1g2** = the correlation between the observed polygenic scores for education and BMI;
 
-* **h2.x** = the variance explained in the observed outcome x (maternal education) by the observed polygenic score for education (**h2.x = rg1x^2**);
+* **h2.x** = the additive genetic variance explained in the observed exposure X (maternal education) under the scenario of interest. When calculating genetic confounding for with the two observed polygenic score, then (**h2.x = rg1x^2**), otherwise h2.x is the chosen heritability estimate for exposure X. 
 
-* **h2.y** = the variance explained in the observed outcome y (BMI) by the observed polygenic score for BMI (**h2.y =rg2y^2**);
+* **h2.y** = the additive genetic variance explained in the observed outcome Y (BMI)  under the scenario of interest. When calculating genetic confounding for with the two observed polygenic score, then (**h2.y =rg2y^2**) otherwise h2.y is the chosen heritability estimate for outcome Y. 
 
 * **print = T** = enables the examination of model parameters
 
@@ -209,7 +207,7 @@ gsensXY(rxy=-0.0894,
 
 </br>
 
-Similar to the one polygenic score case the model is specified with paths between variables X and Y and polygenic scores for X (g1) and Y (g2). In addition to the negative variance, several parameters have unlikely values. For example, the cross path bg1y flips from a negative to a positive value, which would imply that a higher polygenic score for education is linked to higher BMI. In such cases, constraints can be imposed on the the model in the following way.
+Similar to the one polygenic score case, the model is specified with paths between variables X and Y and polygenic scores for X (g1) and Y (g2). In some cases, parameters may take unlikely values. For example, the cross path bg1y flips from a negative to a positive value, which would imply that a higher polygenic score for education is linked to higher BMI. In such cases, constraints can be imposed on the the model in the following way.
 
 
 
@@ -227,25 +225,21 @@ gsensXY(rxy=-0.0894,
               constrain='lg1 < 1 \n lg2 < 1 \n  vg1 > 0  \n vg2 > 0 \n bg1y < 0 \n bg2x < 0 \n bxy < 0')
 ```
 
-Loadings for the latent part of the model are constrained to be less than 1 and residual variances to be positive. Cross paths and the residual association are constrained to be negative, ie not flip sign.  
+Loadings for the latent part of the model are constrained to be less than 1 (lg1 < 1 & lg2 < 1) and residual variances to be positive (vg1 > 0 & vg2). Cross paths and the residual association are constrained to be negative, ie not flip sign (e.g. bg1y < 0).  
 
 Note that constraints need to be imposed cautiously on the model for two reasons:  
 
-1) To avoid nonsensical constraints, for example to keep the negative constraints on the cross paths imposed in this example in another situation where the polygenic scores are expected to be positively associated with both X and Y.
+1) To avoid nonsensical constraints. In another example, where the polygenic scores are expected to be positively associated with both X and Y keeping the < 0 constraint on the cross path above would be nonsensical. Instead > 0 should be used to keep the cross path positive. 
 
 2) Constraining parameters can decrease standard error even when the value of the parameter is not changed. That is, if lg1 is estimated to 1, constraining it to 1 will not change the estimates but will prevent the model from estimating a standard error for lg1 and can reduce standard errors of other parameters including the estimates of interest.
 
-Additional remarks regarding constraints:  
-
-- Constraining vg1 > 0 did not prevent the warning regarding negative variance, which is estimated to -0.000. This can be solved by using vg1 > 1e-06. However, such negative variances of -0.000 can be left alone as constraining them does not change estimate values but can reduce standard errors. 
-
-- All model parameters should be systematically checked after fitting a model, and before and after constraints are imposed. In addition to implausible parameters, so-called 'heywood cases' should be checked. Here, as the model is standardized, no parameter should be above 1 or below -1. For example, a heritability parameter above 1 would correspond to a heritability above 100%.
+All model parameters should be systematically checked after fitting a model, and before and after constraints are imposed. In addition to implausible parameters, so-called 'heywood cases' should be checked. Here, as the model is standardized, no parameter should be above 1 or below -1. For example, a heritability parameter above 1 would correspond to a heritability above 100%.
 
 
 
 ## Check with one polygenic score
 
-Findings for the constrained vs the unconstrained model diverge. We can use gsensY to and just for the outcome-related polygenic score only, here BMI. Note that in theory, if the polygenic score for the outcome was perfect, adjusting for that polygenic score would be sufficient as it would capture shared genetic influences between X and Y. Findings from adjusting for the BMI polygenic score only converge with the constrained version of the two polygenic score approach.
+Findings for the constrained vs the unconstrained model diverge. We can use gsensY to adjust for the outcome-related polygenic score only, here BMI. Note that in theory, if the polygenic score for the outcome was perfect, adjusting for that polygenic score would be sufficient as it would capture shared genetic influences between X and Y. Findings from adjusting for the BMI polygenic score only converge with the constrained version of the two polygenic score approach.
 
 ```{r}
 gsensY(rxy=-0.0894,
@@ -255,12 +249,7 @@ gsensY(rxy=-0.0894,
              h2=0.2524^2)
 ```
 
-Note here that the vg is -0.000 here too, which does not affect the model so the warning can be safely ignored.
- 
 ## Heritability scenario
-
-
-
 
 ```{r}
 gsensXY(rxy=-0.0894,
@@ -272,11 +261,24 @@ gsensXY(rxy=-0.0894,
               n=3785,
               h2.x=0.25*0.31,
               h2.y=0.186,
-        constrain='lg1 < 1 \n lg2 < 1 \n  vg1 > 0  \n vg2 > 0 \n bg1y < 0 \n bg2x < 0 \n bxy < 0')
+        constrain='lg1 < 1 \n lg2 < 1 \n  vg1 > 0  \n vg2 > 0 \n bg1y < 0 \n bg2x < 0 \n bxy < 0',
+        print=T)
 ```
 
-Heritability scenarios of interest can be modelled we two polygenic scores by replacing h2.x and h2.y by the chosen values, here SNP-heritability estimates. Not that in h2.x=0.25x0.31, the factor 0.25 corresponds to the genetic relatedness between child and mother (i.e. sqrt(h2.x) is computed in the model leading to the value of the path equal to 0.5xsqrt(0.31).) 
+Heritability scenarios of interest can be modelled with two polygenic scores by replacing h2.x and h2.y by the chosen values, here SNP-heritability estimates. Not that in h2.x=0.25x0.31, the factor 0.25 corresponds to the genetic relatedness between child and mother (i.e. sqrt(h2.x) is computed in the model leading to the value of the path equal to 0.5xsqrt(0.31).) 
 
+Note that in the model above corresponding to SNP-heritability, the genetic correlation between the latent genetic factor is estimated based on the observed polygenic scores and the heritability estimates to be -0.224. We have an external estimate of -0.279 based on LD score regression (See Table 1). We can use a fixed solution to use this value instead of the estimated value: 
 
- 
- 
+```{r}
+  gsensXY(rxy=-0.0894,
+          rg1x=sqrt(0.25*0.31),               
+          rg2y=sqrt(0.186), 
+          rg1y=sqrt(0.25*0.31)*-0.0269/0.2909, 
+          rg2x=sqrt(0.186)*-0.0839/0.2524,
+          rg1g2=-0.279,
+          n=3663, 
+          h2.x=0.25*0.31, 
+          h2.y=0.186,
+          print=T)
+ ```
+Note that rg1y and rg2x are computed by multiplying the heritabilities under the chosen scenario by a ratio comparable to k in the one polygenic score case. 

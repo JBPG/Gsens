@@ -1,10 +1,10 @@
 Package: Gsens
 Type: Package
-Title: R Package for a genetically informed sensitivity analysis
+Title: R Package for a genetic sensitivity analysis
 Version: 0.1.0
-Author: Jean-Baptiste Pingault, Frank Dudbridge
+Author: Jean-Baptiste Pingault, Tabea Schoeler, Frank Dudbridge
 Maintainer: Jean-Baptiste Pingault <j.pingault@ucl.ac.uk>
-Description: Includes functions to estimate the role of genetic confounding in explaining the associations between two phenotypes
+Description: Includes functions to adjust for genetic confounding in epidemiological associations
 License: GPL
 Encoding: UTF-8
 LazyData: true
