@@ -1,11 +1,10 @@
 Package: Gsens
 Type: Package
-Title: What the Package Does (Title Case)
+Title: R Package for a genetically informed sensitivity analysis
 Version: 0.1.0
 Author: Jean-Baptiste Pingault, Frank Dudbridge
-Maintainer: The package maintainer <yourself@somewhere.net>
-Description: More about what it does (maybe more than one line)
-    Use four spaces when indenting paragraphs within the Description.
-License: What license is it under?
+Maintainer: Jean-Baptiste Pingault <j.pingault@ucl.ac.uk>
+Description: Includes functions to estimate the role of genetic confounding in explaining the associations between two phenotypes
+License: GPL
 Encoding: UTF-8
 LazyData: true

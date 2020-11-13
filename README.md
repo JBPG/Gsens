@@ -56,23 +56,20 @@ variables**
 
 </br>
 
-To begin, please download the “gens.source.R” file from
-[here](https://github.com/JBPG/Gsens/blob/master/gsens.source.R) and
-save it into your current working directory. Then load the Gsens source
-code with the code below:
+# Installation of Gsens
+
+</br>
+
+To begin, please install and load the Gsens package with the code below:
 
 ``` r
-HOME=getwd()
-setwd(HOME)
-source('gsens.source.R')
-
 # Install devtools
-#install.packages("devtools")
-#library(devtools)
+install.packages("devtools")
+library(devtools)
 
 # Install Gsens
-#install_github("JBPG/Gsens")
-#library(Gsens)
+install_github("JBPG/Gsens")
+library(Gsens)
 ```
 
 Three functions are available:
