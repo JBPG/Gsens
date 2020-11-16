@@ -6,7 +6,7 @@
 \usage{
 gsensX(rxy,rgx,rgy,n,h2,constrain=NULL,print=FALSE)
 }
-gsensY
+
 
 \arguments{
    \item{rxy}{the observed phenotypic correlation between exposure X and outcome Y}
